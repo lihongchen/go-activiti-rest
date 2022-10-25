@@ -1,6 +1,12 @@
 # Go Client For Activiti cloud v7.x  Rest API
 Go-activiti-rest client offers a library for interacting with Activiti6 server from Go applications. If you write applications in Golang and integrate them with Activiti7 then go-activiti-rest client will be uniquely useful.
+
 come from  jumpjumpbean/go-activiti-rest
+
+--- 
+# Install
+    go get github.com/lihongchen/go-activiti-rest
+
 --- 
 # Importing
     import github.com/lihongchen/go-activiti-rest
