@@ -13,15 +13,14 @@ import (
 
 // NewClient returns new Client struct
 // BaseURL is the activiti rest api url, for example 'http://localhost:8080'
-func NewClient(username string, password string, baseURL string) (*ActClient, error) {
-	if username == "" || password == "" || baseURL == "" {
-		return nil, errors.New("Username, Password and BaseURL are required to create a Client ")
+func NewClient(token string, baseURL string) (*ActClient, error) {
+	if token == "" || baseURL == "" {
+		return nil, errors.New("token and BaseURL are required to create a Client ")
 	}
 
 	return &ActClient{
-		Client: &http.Client{},
-		Username: username,
-		Password: password,
+		Client:  &http.Client{},
+		Token:   token,
 		BaseURL: baseURL,
 	}, nil
 }
@@ -69,7 +68,7 @@ func (c *ActClient) Send(req *http.Request, v interface{}) error {
 		if err == nil && len(data) > 0 {
 			json.Unmarshal(data, errResp)
 		}
-
+		fmt.Println(string(data))
 		return errResp
 	}
 
@@ -87,8 +86,7 @@ func (c *ActClient) Send(req *http.Request, v interface{}) error {
 
 // SendWithBasicAuth makes a request to the API using username:password basic auth
 func (c *ActClient) SendWithBasicAuth(req *http.Request, v interface{}) error {
-	req.SetBasicAuth(c.Username, c.Password)
-
+	req.Header.Add("Authorization", "Bearer "+c.Token)
 	return c.Send(req, v)
 }
 
@@ -125,4 +123,3 @@ func (c *ActClient) log(r *http.Request, resp *http.Response) {
 		c.Log.Write([]byte(fmt.Sprintf("Request: %s\nResponse: %s\n", reqDump, string(respDump))))
 	}
 }
-

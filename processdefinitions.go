@@ -8,13 +8,14 @@ import (
 // Endpoint: GET repository/process-definitions/{processDefinitionId}
 func (c *ActClient) GetProcessDefinition(pid string) (*ActProcessDefinition, error) {
 	pd := &ActProcessDefinition{}
+	url := fmt.Sprintf("%s%s%s", c.BaseURL, "/process-definitions/", pid)
 
-	req, err := c.NewRequest("GET", fmt.Sprintf("%s%s%s", c.BaseURL, "/repository/process-definitions/", pid), nil)
+	fmt.Println(url)
+	req, err := c.NewRequest("GET", fmt.Sprintf("%s%s%s", c.BaseURL, "/process-definitions/", pid), nil)
 	if err != nil {
 		return pd, err
 	}
-
-	if err = c.SendWithBasicAuth(req, pd); err != nil {
+	if err = c.SendWithBasicAuth(req, &pd); err != nil {
 		return pd, err
 	}
 
@@ -23,17 +24,17 @@ func (c *ActClient) GetProcessDefinition(pid string) (*ActProcessDefinition, err
 
 // GetProcessDefinitions retrieves all process definitions
 // Endpoint: GET repository/process-definitions
-func (c *ActClient) GetProcessDefinitions() (*ActProcessDefinitions, error) {
-	pds := &ActProcessDefinitions{}
-
-	req, err := c.NewRequest("GET", fmt.Sprintf("%s%s", c.BaseURL, "repository/process-definitions"), nil)
+func (c *ActClient) GetProcessDefinitions() (ActListProcessDefinitions, error) {
+	pds := ActListProcessDefinitions{}
+	url := fmt.Sprintf("%s%s", c.BaseURL, "/process-definitions")
+	fmt.Println(url)
+	req, err := c.NewRequest("GET", url, nil)
 	if err != nil {
 		return pds, err
 	}
 
-	if err = c.SendWithBasicAuth(req, pds); err != nil {
+	if err = c.SendWithBasicAuth(req, &pds); err != nil {
 		return pds, err
 	}
-
 	return pds, nil
 }

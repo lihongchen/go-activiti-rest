@@ -11,10 +11,10 @@ import (
 type TaskAction string
 
 const (
-	TASK_ACTION_COMPLETE   TaskAction = "complete"
-	TASK_ACTION_CLAIM      TaskAction = "claim"
-	TASK_ACTION_DELEGATE   TaskAction = "delegate"
-	TASK_ACTION_RESOLVE    TaskAction = "resolve"
+	TASK_ACTION_COMPLETE TaskAction = "complete"
+	TASK_ACTION_CLAIM    TaskAction = "claim"
+	TASK_ACTION_DELEGATE TaskAction = "delegate"
+	TASK_ACTION_RESOLVE  TaskAction = "resolve"
 )
 
 type (
@@ -23,129 +23,136 @@ type (
 
 	// Client represents a Activiti 6.x REST API Client
 	ActClient struct {
-		Client         *http.Client
-		Username       string
-		Password       string
-		BaseURL        string
-		Log            io.Writer // If user set log file name all requests will be logged there
+		Client  *http.Client
+		Token   string
+		BaseURL string
+		Log     io.Writer // If user set log file name all requests will be logged there
 	}
 
 	expirationTime int64
 
 	// ErrorResponse https://www.activiti.org/userguide/#_error_response_body
 	ActErrorResponse struct {
-		Response        *http.Response        `json:"-"`
-		statusCode      string                `json:"statusCode"`
-		errorMessage    string                `json:"errorMessage"`
+		Response     *http.Response `json:"-"`
+		statusCode   string         `json:"statusCode"`
+		errorMessage string         `json:"errorMessage"`
 	}
 
 	ActProcessDefinition struct {
-		ID                         string   `json:"id,omitempty"`
-		URL                        string   `json:"url,omitempty"`
-		Version                    int      `json:"version,omitempty"`
-		Key                        string   `json:"key,omitempty"`
-		Category                   string   `json:"category,omitempty"`
-		Suspended                  bool     `json:"suspended,omitempty"`
-		Name                       string   `json:"name,omitempty"`
-		Description                string   `json:"description,omitempty"`
-		DeploymentId               string   `json:"deploymentId,omitempty"`
-		DeploymentUrl              string   `json:"deploymentUrl,omitempty"`
-		GraphicalNotationDefined   bool     `json:"graphicalNotationDefined,omitempty"`
-		Resource                   string   `json:"resource,omitempty"`
-		DiagramResource            string   `json:"diagramResource,omitempty"`
-		StartFormDefined           bool     `json:"startFormDefined,omitempty"`
+		ProcessDefinition ProcessDefinition `json:"entry,omitempty"`
 	}
 
+	ProcessDefinition struct {
+		ID              string `json:"id,omitempty"`
+		Key             string `json:"key,omitempty"`
+		Name            string `json:"name,omitempty"`
+		Category        string `json:"category,omitempty"`
+		Version         int    `json:"version,omitempty"`
+		AppName         string `json:"appName,omitempty"`
+		AppVersion      string `json:"appVersion,omitempty"`
+		ServiceFullName string `json:"serviceFullName,omitempty"`
+		ServiceName     string `json:"serviceName,omitempty"`
+		ServiceType     string `json:"serviceType,omitempty"`
+		ServiceVersion  string `json:"serviceVersion,omitempty"`
+	}
 	ActProcessDefinitions struct {
-		ProcessDefinitions  []ActProcessDefinition    `json:"data,omitempty"`
-		Total               int                       `json:"total,omitempty"`
-		Start               int                       `json:"start,omitempty"`
-		Sort                string                    `json:"sort,omitempty"`
-		Order               string                    `json:"order,omitempty"`
-		Size                int                       `json:"size,omitempty"`
+		ProcessDefinitions []ActProcessDefinition `json:"entries,omitempty"`
+		Pagination         Pagination             `json:"pagination,omitempty"`
+	}
+	ActListProcessDefinitions struct {
+		List ActProcessDefinitions
+	}
+	Pagination struct {
+		Count        int  `json:"count,omitempty"`
+		HasMoreItems bool `json:"hasMoreItems,omitempty"`
+		MaxItems     int  `json:"maxItems,omitempty"`
+		SkipCount    int  `json:"skipCount,omitempty"`
+		TotalItems   int  `json:"totalItems,omitempty"`
 	}
 
 	ActProcessInstance struct {
-		ID                         string   `json:"id,omitempty"`
-		URL                        string   `json:"url,omitempty"`
-		BusinessKey                string   `json:"businessKey,omitempty"`
-		Suspended                  bool     `json:"suspended,omitempty"`
-		ProcessDefinitionUrl       string   `json:"processDefinitionUrl,omitempty"`
-		ActivityId                 string   `json:"activityId,omitempty"`
-		TenantId                   string   `json:"tenantId,omitempty"`
+		ProcessInstance ProcessInstance `json:"entry,omitempty"`
 	}
 
+	ProcessInstance struct {
+		ID                       string `json:"id,omitempty"`
+		AppName                  string `json:"appName,omitempty"`
+		Initiator                string `json:"initiator,omitempty"`
+		ProcessDefinitionId      string `json:"processDefinitionId,omitempty"`
+		ProcessDefinitionKey     string `json:"processDefinitionKey,omitempty"`
+		ProcessDefinitionName    string `json:"processDefinitionName,omitempty"`
+		ProcessDefinitionVersion int    `json:"processDefinitionVersion,omitempty"`
+		ServiceFullName          string `json:"serviceFullName,omitempty"`
+		ServiceName              string `json:"serviceName,omitempty"`
+		ServiceType              string `json:"serviceType,omitempty"`
+		ServiceVersion           string `json:"serviceVersion,omitempty"`
+		StartDate                string `json:"startDate,omitempty"`
+		Status                   string `json:"status,omitempty"`
+	}
 	ActProcessInstances struct {
-		ProcessInstances    []ActProcessInstance      `json:"data,omitempty"`
-		Total               int                       `json:"total,omitempty"`
-		Start               int                       `json:"start,omitempty"`
-		Sort                string                    `json:"sort,omitempty"`
-		Order               string                    `json:"order,omitempty"`
-		Size                int                       `json:"size,omitempty"`
+		ProcessInstances []ActProcessInstance `json:"entries,omitempty"`
+		Pagination       Pagination           `json:"pagination,omitempty"`
+	}
+
+	ActListProcessInstances struct {
+		List ActProcessInstances
 	}
 
 	ActStartProcessInstance struct {
-		ProcessDefinitionId    string          `json:"processDefinitionId,omitempty"`
-		ProcessDefinitionKey   string          `json:"processDefinitionKey,omitempty"`
-		Message                string          `json:"message,omitempty"`
-		BusinessKey            string          `json:"businessKey,omitempty"`
-		TenantId               string          `json:"tenantId,omitempty"`
-		Variables              []ActVariable   `json:"variables,omitempty"`
+		ProcessDefinitionId  string                 `json:"processDefinitionId,omitempty"`
+		ProcessDefinitionKey string                 `json:"processDefinitionKey,omitempty"`
+		PayloadType          string                 `json:"payloadType,omitempty"`
+		BusinessKey          string                 `json:"businessKey,omitempty"`
+		Name                 string                 `json:"name,omitempty"`
+		Variables            map[string]interface{} `json:"variables,omitempty"`
 	}
-
+	Task struct {
+		Name                string `json:"name,omitempty"`
+		ID                  string `json:"id,omitempty"`
+		AppName             string `json:"appName,omitempty"`
+		Assignee            string `json:"assignee,omitempty"`
+		CreatedDate         string `json:"createdDate,omitempty"`
+		FormKey             string `json:"formKey,omitempty"`
+		ProcessDefinitionId string `json:"processDefinitionId,omitempty"`
+		ProcessInstanceId   string `json:"processInstanceId,omitempty"`
+		ServiceFullName     string `json:"serviceFullName,omitempty"`
+		ServiceName         string `json:"serviceName,omitempty"`
+		ServiceType         string `json:"serviceType,omitempty"`
+		ServiceVersion      string `json:"serviceVersion,omitempty"`
+		Status              string `json:"status,omitempty"`
+		TaskDefinitionKey   string `json:"taskDefinitionKey,omitempty"`
+		Priority            int    `json:"priority,omitempty"`
+		Standalone          bool   `json:"standalone,omitempty"`
+	}
 	ActTask struct {
-		Assignee            string   `json:"assignee,omitempty"`
-		CreateTime          string   `json:"createTime,omitempty"`
-		DelegationState     string   `json:"delegationState,omitempty"`
-		Description         string   `json:"description,omitempty"`
-		DueDate             string   `json:"dueDate,omitempty"`
-		Execution           string   `json:"execution,omitempty"`
-		Dd                  string   `json:"id,omitempty"`
-		Name                string   `json:"name,omitempty"`
-		Owner               string   `json:"owner,omitempty"`
-		ParentTask          string   `json:"parentTask,omitempty"`
-		Priority            int      `json:"priority,omitempty"`
-		ProcessDefinition   string   `json:"processDefinition,omitempty"`
-		ProcessInstance     string   `json:"processInstance,omitempty"`
-		Suspended           bool     `json:"suspended,omitempty"`
-		TaskDefinitionKey   string   `json:"taskDefinitionKey,omitempty"`
-		Url                 string   `json:"url,omitempty"`
-		TenantId            string   `json:"tenantId,omitempty"`
+		Task Task `json:"entry,omitempty"`
+	}
+	ActTasks struct {
+		Tasks      []ActTask  `json:"entries,omitempty"`
+		Pagination Pagination `json:"pagination,omitempty"`
 	}
 
-	ActTasks struct {
-		Tasks               []ActTask                 `json:"data,omitempty"`
-		Total               int                       `json:"total,omitempty"`
-		Start               int                       `json:"start,omitempty"`
-		Sort                string                    `json:"sort,omitempty"`
-		Order               string                    `json:"order,omitempty"`
-		Size                int                       `json:"size,omitempty"`
+	ActListTasks struct {
+		List ActTasks
 	}
 
 	ActUser struct {
-		ID              string   `json:"id,omitempty"`
-		FirstName       string   `json:"firstName,omitempty"`
-		LastName        string   `json:"lastName,omitempty"`
-		Email           string   `json:"email,omitempty"`
-		URL             string   `json:"url,omitempty"`
-		PictureURL      string   `json:"pictureUrl,omitempty"`
-		Password        string   `json:"password,omitempty"`
+		ID         string `json:"id,omitempty"`
+		FirstName  string `json:"firstName,omitempty"`
+		LastName   string `json:"lastName,omitempty"`
+		Email      string `json:"email,omitempty"`
+		URL        string `json:"url,omitempty"`
+		PictureURL string `json:"pictureUrl,omitempty"`
+		Password   string `json:"password,omitempty"`
 	}
 
 	ActUsers struct {
-		Users       []ActUser    `json:"data,omitempty"`
-		Total       int          `json:"total,omitempty"`
-		Start       int          `json:"start,omitempty"`
-		Sort        string       `json:"sort,omitempty"`
-		Order       string       `json:"order,omitempty"`
-		Size        int          `json:"size,omitempty"`
-	}
-
-	ActVariable struct {
-		Name        string   `json:"name,omitempty"`
-		Value       string   `json:"value,omitempty"`
-		Operation   string   `json:"operation,omitempty"`
-		Type        string   `json:"type,omitempty"`
+		Users []ActUser `json:"data,omitempty"`
+		Total int       `json:"total,omitempty"`
+		Start int       `json:"start,omitempty"`
+		Sort  string    `json:"sort,omitempty"`
+		Order string    `json:"order,omitempty"`
+		Size  int       `json:"size,omitempty"`
 	}
 )
 

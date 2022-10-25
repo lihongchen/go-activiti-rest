@@ -10,7 +10,7 @@ import (
 func (c *ActClient) GetTask(tid string) (*ActTask, error) {
 	tk := &ActTask{}
 
-	req, err := c.NewRequest("GET", fmt.Sprintf("%s%s%s", c.BaseURL, "/runtime/tasks/", tid), nil)
+	req, err := c.NewRequest("GET", fmt.Sprintf("%s%s%s", c.BaseURL, "/tasks/", tid), nil)
 	if err != nil {
 		return tk, err
 	}
@@ -24,15 +24,14 @@ func (c *ActClient) GetTask(tid string) (*ActTask, error) {
 
 // GetTasks retrieves all tasks
 // Endpoint: GET runtime/tasks
-func (c *ActClient) GetTasks() (*ActTasks, error) {
-	tks := &ActTasks{}
+func (c *ActClient) GetTasks() (*ActListTasks, error) {
+	tks := &ActListTasks{}
 
-	req, err := c.NewRequest("GET", fmt.Sprintf("%s%s", c.BaseURL, "/runtime/tasks"), nil)
+	req, err := c.NewRequest("GET", fmt.Sprintf("%s%s", c.BaseURL, "/tasks"), nil)
 	if err != nil {
 		return tks, err
 	}
-
-	if err = c.SendWithBasicAuth(req, tks); err != nil {
+	if err = c.SendWithBasicAuth(req, &tks); err != nil {
 		return tks, err
 	}
 
@@ -41,23 +40,56 @@ func (c *ActClient) GetTasks() (*ActTasks, error) {
 
 // TaskAction complete/claim/delegate/resolve a task in activiti
 // Endpoint: POST runtime/tasks/{taskId}
-func (c *ActClient) TaskAction(tid string, action TaskAction, assignee string) error {
-	if tid == "" || action == "" {
-		return errors.New("Task id and action are required for task action ")
-	}
-	var params map[string]string
-	if TASK_ACTION_CLAIM == action || TASK_ACTION_DELEGATE == action {
-		params = map[string]string{
-			"action": string(action),
-			"assignee": assignee,
-		}
-	} else {
-		params = map[string]string{
-			"action": string(action),
-		}
+func (c *ActClient) TaskActionComplete(tid string) error {
+	if tid == "" {
+		return errors.New("Task id   are required for task action ")
 	}
 
-	req, err := c.NewRequest("POST", fmt.Sprintf("%s%s%s", c.BaseURL, "/runtime/tasks/", tid), params)
+	params := map[string]string{"payloadType": "CompleteTaskPayload"}
+
+	req, err := c.NewRequest("POST", fmt.Sprintf("%s%s%s%s", c.BaseURL, "/tasks/", tid, "/complete"), params)
+	if err != nil {
+		return err
+	}
+
+	if err = c.SendWithBasicAuth(req, nil); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// TaskAction complete/claim/delegate/resolve a task in activiti
+// Endpoint: POST runtime/tasks/{taskId}
+func (c *ActClient) TaskActionClaim(tid string, assignee string) error {
+	if tid == "" {
+		return errors.New("Task id   are required for task action ")
+	}
+
+	params := map[string]string{"action": string(TASK_ACTION_COMPLETE), "assignee": assignee}
+
+	req, err := c.NewRequest("POST", fmt.Sprintf("%s%s%s%s", c.BaseURL, "/tasks/", tid, "/claim"), params)
+	if err != nil {
+		return err
+	}
+
+	if err = c.SendWithBasicAuth(req, nil); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// TaskAction complete/claim/delegate/resolve a task in activiti
+// Endpoint: POST runtime/tasks/{taskId}
+func (c *ActClient) TaskActionAssign(tid string, assignee string) error {
+	if tid == "" {
+		return errors.New("Task id   are required for task action ")
+	}
+
+	params := map[string]string{"action": string(TASK_ACTION_COMPLETE), "assignee": assignee}
+
+	req, err := c.NewRequest("POST", fmt.Sprintf("%s%s%s%s", c.BaseURL, "/tasks/", tid, "/assign"), params)
 	if err != nil {
 		return err
 	}
