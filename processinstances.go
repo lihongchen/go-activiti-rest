@@ -75,11 +75,20 @@ func (c *ActClient) StartProcessInstanceByKey(key string) (*ActProcessInstance, 
 	return c.startProcessInstance(ActStartProcessInstance{ProcessDefinitionKey: key})
 }
 
-// Start a process instance by process definition message
+// Start a process instance by process definition key and variables
 func (c *ActClient) StartProcessInstanceWithVariables(key string, variables map[string]interface{}) (*ActProcessInstance, error) {
 	if key == "" {
 		return nil, errors.New("key is required to start a process instance ")
 	}
 
 	return c.startProcessInstance(ActStartProcessInstance{ProcessDefinitionKey: key, Variables: variables})
+}
+
+// Start a process instance by process definition key and variables
+func (c *ActClient) StartProcessInstanceWithBusinessKeyAndVariables(key, BusinessKey string, variables map[string]interface{}) (*ActProcessInstance, error) {
+	if key == "" {
+		return nil, errors.New("key is required to start a process instance ")
+	}
+
+	return c.startProcessInstance(ActStartProcessInstance{ProcessDefinitionKey: key, BusinessKey: BusinessKey, Variables: variables})
 }
