@@ -22,6 +22,24 @@ func (c *ActClient) GetProcessInstance(pid string) (*ActProcessInstance, error) 
 	return pi, nil
 }
 
+// GetProcessInstance retrieves process instance by ID
+// Endpoint: GET runtime/process-instances/{processInstanceId}
+func (c *ActClient) GetProcessDiagram(pid string) ([]byte, error) {
+	var pDiagram []byte
+
+	req, err := c.NewRequest("GET", fmt.Sprintf("%s%s%s%s", c.BaseURL, "/process-instances/", pid, "/model"), nil)
+	req.Header.Set("content-type", "image/svg+xml;charset=UTF-8")
+
+	if err != nil {
+		return pDiagram, err
+	}
+
+	if pDiagram, err = c.GetImgWithBasicAuth(req, pDiagram); err != nil {
+		return pDiagram, err
+	}
+	return pDiagram, nil
+}
+
 // GetProcessInstances retrieves all process instances
 // Endpoint: GET runtime/process-instances
 func (c *ActClient) GetProcessInstances() (*ActListProcessInstances, error) {
