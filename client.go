@@ -50,7 +50,7 @@ func (c *ActClient) Send(req *http.Request, v interface{}) error {
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("Accept-Language", "zh-CN,en_US")
 	if req.Header.Get("Content-type") == "" {
-		req.Header.Set("Content-type", "application/sss")
+		req.Header.Set("Content-type", "application/json")
 	}
 
 	resp, err = c.Client.Do(req)

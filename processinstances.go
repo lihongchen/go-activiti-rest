@@ -5,6 +5,11 @@ import (
 	"fmt"
 )
 
+//GetProcessDefinitionMeta 获取process definition 元数据
+func (c *ActClient) GetProcessDefinitionMeta(pid string) (*ActProcessInstance, error) {
+	return nil, nil
+}
+
 // GetProcessInstance retrieves process instance by ID
 // Endpoint: GET runtime/process-instances/{processInstanceId}
 func (c *ActClient) GetProcessInstance(pid string) (*ActProcessInstance, error) {
@@ -20,6 +25,26 @@ func (c *ActClient) GetProcessInstance(pid string) (*ActProcessInstance, error) 
 	}
 
 	return pi, nil
+}
+
+//SetProcessVariables 设置流程全局变量
+func (c *ActClient) SetProcessVariables(pid string, variables map[string]interface{}) error {
+	var pis interface{}
+	url := fmt.Sprintf("%s%s%s%s", c.BaseURL, "/process-instances/", pid, "/variables")
+	params := struct {
+		PayloadType string `json:"payloadType"`
+		Variables   map[string]interface{}
+	}{PayloadType: "SetProcessVariablesPayload", Variables: variables}
+
+	fmt.Println(url)
+	req, err := c.NewRequest("POST", fmt.Sprintf("%s%s%s%s", c.BaseURL, "/process-instances/", pid, "/variables"), params)
+	if err != nil {
+		return err
+	}
+	if err = c.SendWithBasicAuth(req, &pis); err != nil {
+		return err
+	}
+	return nil
 }
 
 // GetProcessInstance retrieves process instance by ID

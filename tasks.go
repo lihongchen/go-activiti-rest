@@ -61,6 +61,30 @@ func (c *ActClient) TaskActionComplete(tid string) error {
 
 // TaskAction complete/claim/delegate/resolve a task in activiti
 // Endpoint: POST runtime/tasks/{taskId}
+func (c *ActClient) TaskActionCompleteWithVariables(tid string, v map[string]string) error {
+	if tid == "" {
+		return errors.New("Task id   are required for task action ")
+	}
+
+	params := map[string]string{"payloadType": "CompleteTaskPayload"}
+	for key, v := range v {
+		params[key] = v
+	}
+	req, err := c.NewRequest("POST", fmt.Sprintf("%s%s%s%s", c.BaseURL, "/tasks/", tid, "/complete"), params)
+	if err != nil {
+		fmt.Println(req)
+		return err
+	}
+
+	if err = c.SendWithBasicAuth(req, nil); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// TaskAction complete/claim/delegate/resolve a task in activiti
+// Endpoint: POST runtime/tasks/{taskId}
 func (c *ActClient) TaskActionClaim(tid string, assignee string) error {
 	if tid == "" {
 		return errors.New("Task id   are required for task action ")
