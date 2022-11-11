@@ -5,11 +5,6 @@ import (
 	"fmt"
 )
 
-//GetProcessDefinitionMeta 获取process definition 元数据
-func (c *ActClient) GetProcessDefinitionMeta(pid string) (*ActProcessInstance, error) {
-	return nil, nil
-}
-
 // GetProcessInstance retrieves process instance by ID
 // Endpoint: GET runtime/process-instances/{processInstanceId}
 func (c *ActClient) GetProcessInstance(pid string) (*ActProcessInstance, error) {

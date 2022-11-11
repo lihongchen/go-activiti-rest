@@ -154,6 +154,16 @@ type (
 		Order string    `json:"order,omitempty"`
 		Size  int       `json:"size,omitempty"`
 	}
+	ProcessDefinitionMeta struct {
+		ID          string   `json:"id,omitempty"`
+		Name        string   `json:"name,omitempty"`
+		Description string   `json:"description,omitempty"`
+		Version     int      `json:"version,omitempty"`
+		Groups      []string `json:"groups,omitempty"`
+	}
+	ActProcessDefinitionMeta struct {
+		Entry ProcessDefinitionMeta `json:"entry,omitempty"`
+	}
 )
 
 // Error method implementation for ErrorResponse struct

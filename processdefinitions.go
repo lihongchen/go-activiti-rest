@@ -38,3 +38,19 @@ func (c *ActClient) GetProcessDefinitions() (ActListProcessDefinitions, error) {
 	}
 	return pds, nil
 }
+
+//GetProcessDefinitionMeta 获取process definition 元数据
+func (c *ActClient) GetProcessDefinitionMeta(pid string) (*ActProcessDefinitionMeta, error) {
+	pd := &ActProcessDefinitionMeta{}
+	url := fmt.Sprintf("%s%s%s%s", c.BaseURL, "/process-definitions/", pid, "/meta")
+
+	fmt.Println(url)
+	req, err := c.NewRequest("GET", fmt.Sprintf("%s%s%s%s", c.BaseURL, "/process-definitions/", pid, "/meta"), nil)
+	if err != nil {
+		return pd, err
+	}
+	if err = c.SendWithBasicAuth(req, &pd); err != nil {
+		return pd, err
+	}
+	return pd, nil
+}
