@@ -27,7 +27,7 @@ func (c *ActClient) GetTask(tid string) (*ActTask, error) {
 func (c *ActClient) GetTasks() (*ActListTasks, error) {
 	tks := &ActListTasks{}
 
-	req, err := c.NewRequest("GET", fmt.Sprintf("%s%s", c.BaseURL, "/tasks"), nil)
+	req, err := c.NewRequest("GET", fmt.Sprintf("%s%s", c.BaseURL, "/tasks?page=0&size=1000"), nil)
 	if err != nil {
 		return tks, err
 	}
