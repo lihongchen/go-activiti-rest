@@ -123,7 +123,7 @@ type (
 		TaskDefinitionKey   string `json:"taskDefinitionKey,omitempty"`
 		Priority            int    `json:"priority,omitempty"`
 		Standalone          bool   `json:"standalone,omitempty"`
-		BusinessKey         bool   `json:"businessKey,omitempty"`
+		BusinessKey         string `json:"businessKey,omitempty"`
 	}
 	ActTask struct {
 		Task Task `json:"entry,omitempty"`
