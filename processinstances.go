@@ -22,7 +22,7 @@ func (c *ActClient) GetProcessInstance(pid string) (*ActProcessInstance, error) 
 	return pi, nil
 }
 
-//SetProcessVariables 设置流程全局变量
+// SetProcessVariables 设置流程全局变量
 func (c *ActClient) SetProcessVariables(pid string, variables map[string]interface{}) error {
 	var pis interface{}
 	url := fmt.Sprintf("%s%s%s%s", c.BaseURL, "/process-instances/", pid, "/variables")
@@ -129,4 +129,22 @@ func (c *ActClient) StartProcessInstanceWithBusinessKeyAndVariables(key, Busines
 	}
 
 	return c.startProcessInstance(ActStartProcessInstance{ProcessDefinitionKey: key, BusinessKey: BusinessKey, Variables: variables})
+}
+
+// Cancel a process instance by process instance key
+func (c *ActClient) Cancel(key string) error {
+	if key == "" {
+		return errors.New("key is required to start a process instance ")
+	}
+	pi := &ActProcessInstance{}
+	req, err := c.NewRequest("DELETE", fmt.Sprintf("%s%s%s", c.BaseURL, "/process-instances/", key), nil)
+	if err != nil {
+		return err
+	}
+
+	if err = c.SendWithBasicAuth(req, &pi); err != nil {
+		return err
+	}
+
+	return nil
 }
