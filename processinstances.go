@@ -3,6 +3,7 @@ package activiti
 import (
 	"errors"
 	"fmt"
+	"strings"
 )
 
 // GetProcessInstance retrieves process instance by ID
@@ -20,6 +21,27 @@ func (c *ActClient) GetProcessInstance(pid string) (*ActProcessInstance, error) 
 	}
 
 	return pi, nil
+}
+
+// AdminSetProcessVariables admin设置流程全局变量
+func (c *ActClient) AdminSetProcessVariables(pid string, variables map[string]interface{}) error {
+	var pis interface{}
+	c.BaseURL = strings.ReplaceAll(c.BaseURL, "/v1", "/admin/v1")
+	url := fmt.Sprintf("%s%s%s%s", c.BaseURL, "/process-instances/", pid, "/variables")
+	params := struct {
+		PayloadType string `json:"payloadType"`
+		Variables   map[string]interface{}
+	}{PayloadType: "SetProcessVariablesPayload", Variables: variables}
+
+	fmt.Println(url)
+	req, err := c.NewRequest("POST", fmt.Sprintf("%s%s%s%s", c.BaseURL, "/process-instances/", pid, "/variables"), params)
+	if err != nil {
+		return err
+	}
+	if err = c.SendWithBasicAuth(req, &pis); err != nil {
+		return err
+	}
+	return nil
 }
 
 // SetProcessVariables 设置流程全局变量
