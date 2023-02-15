@@ -49,8 +49,8 @@ func (c *ActClient) SetProcessVariables(pid string, variables map[string]interfa
 	var pis interface{}
 	url := fmt.Sprintf("%s%s%s%s", c.BaseURL, "/process-instances/", pid, "/variables")
 	params := struct {
-		PayloadType string `json:"payloadType"`
-		Variables   map[string]interface{}
+		PayloadType string                 `json:"payloadType"`
+		Variables   map[string]interface{} `json:"variables"`
 	}{PayloadType: "SetProcessVariablesPayload", Variables: variables}
 
 	fmt.Println(url)

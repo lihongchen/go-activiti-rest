@@ -81,7 +81,15 @@ func (c *ActClient) Send(req *http.Request, v interface{}) error {
 		return nil
 	}
 
-	return json.NewDecoder(resp.Body).Decode(v)
+	bodyBytes, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil
+	}
+
+	if len(bodyBytes) == 0 {
+		return nil
+	}
+	return json.Unmarshal(bodyBytes, v)
 }
 func (c *ActClient) GetImg(req *http.Request, v interface{}) ([]byte, error) {
 	var (
