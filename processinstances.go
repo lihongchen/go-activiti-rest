@@ -34,7 +34,7 @@ func (c *ActClient) AdminSetProcessVariables(pid string, variables map[string]in
 	}{PayloadType: "SetProcessVariablesPayload", Variables: variables}
 
 	fmt.Println(url)
-	req, err := c.NewRequest("POST", fmt.Sprintf("%s%s%s%s", c.BaseURL, "/process-instances/", pid, "/variables"), params)
+	req, err := c.NewRequest("PUT", fmt.Sprintf("%s%s%s%s", c.BaseURL, "/process-instances/", pid, "/variables"), params)
 	if err != nil {
 		return err
 	}
