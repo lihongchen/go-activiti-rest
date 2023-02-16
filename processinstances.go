@@ -29,8 +29,8 @@ func (c *ActClient) AdminSetProcessVariables(pid string, variables map[string]in
 	c.BaseURL = strings.ReplaceAll(c.BaseURL, "/v1", "/admin/v1")
 	url := fmt.Sprintf("%s%s%s%s", c.BaseURL, "/process-instances/", pid, "/variables")
 	params := struct {
-		PayloadType string `json:"payloadType"`
-		Variables   map[string]interface{}
+		PayloadType string                 `json:"payloadType"`
+		Variables   map[string]interface{} `json:"variables"`
 	}{PayloadType: "SetProcessVariablesPayload", Variables: variables}
 
 	fmt.Println(url)
