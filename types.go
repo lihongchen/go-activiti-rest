@@ -124,6 +124,8 @@ type (
 		Priority            int    `json:"priority,omitempty"`
 		Standalone          bool   `json:"standalone,omitempty"`
 		BusinessKey         string `json:"businessKey,omitempty"`
+		CompletedBy         string `json:"completedBy,omitempty"`
+		CompletedDate       string `json:"completedDate,omitempty"`
 	}
 	ActTask struct {
 		Task Task `json:"entry,omitempty"`
