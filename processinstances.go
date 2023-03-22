@@ -170,3 +170,22 @@ func (c *ActClient) Cancel(key string) error {
 
 	return nil
 }
+
+// 获取流程使用已完成和未完成的所有任务
+func (c *ActClient) ProcessInstancesTasks(key string) error {
+	if key == "" {
+		return errors.New("key is required to start a process instance ")
+	}
+	pi := &ActProcessInstance{}
+	c.BaseURL = strings.ReplaceAll(c.BaseURL, "rb", "query")
+	req, err := c.NewRequest("DELETE", fmt.Sprintf("%s%s%s%s", c.BaseURL, "/process-instances/", key, "/tasks"), nil)
+	if err != nil {
+		return err
+	}
+
+	if err = c.SendWithBasicAuth(req, &pi); err != nil {
+		return err
+	}
+
+	return nil
+}
