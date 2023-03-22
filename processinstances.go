@@ -177,7 +177,7 @@ func (c *ActClient) ProcessInstancesTasks(key string) (*ActListTasks, error) {
 		return nil, errors.New("processkey is required to find tasks ")
 	}
 	pi := &ActListTasks{}
-	c.BaseURL = strings.ReplaceAll(c.BaseURL, "rb", "query")
+	c.BaseURL = strings.ReplaceAll(c.BaseURL, "rb", "query/admin")
 	req, err := c.NewRequest("GET", fmt.Sprintf("%s%s%s%s", c.BaseURL, "/process-instances/", key, "/tasks"), nil)
 	if err != nil {
 		return nil, err
